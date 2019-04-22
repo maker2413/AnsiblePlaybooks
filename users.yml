@@ -1,0 +1,5 @@
+---
+users:
+  - username: maker
+    use_sudo: yes
+    uid: 2413
