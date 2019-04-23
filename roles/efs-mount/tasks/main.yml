@@ -1,0 +1,16 @@
+---
+# tasks file for efs-mount
+- name: Install amazon-efs-utils
+  yum:
+    state: present
+    disable_gpg_check: yes
+    name:
+      - amazon-efs-utils
+
+- name: Mount up /users
+  mount:
+    path: /users
+    src: fs-7226d0d9:/
+    fstype: efs
+    opts: defaults,_netdev
+    state: mounted

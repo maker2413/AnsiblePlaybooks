@@ -1,0 +1,34 @@
+---
+# tasks file for development-instance
+- name:  Add the epel repo
+  yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
+
+- name: Update all packages to latest
+  yum: name=* state=latest
+
+- name: Install devel tools
+  yum:
+    state: present
+    update_cache: yes
+    name:
+      - cscope
+      - git
+      - amazon-efs-utils
+      - tmux
+      - ansible
+      - python2-boto
+
+- name: enable service nfs and ensure it is not masked
+  systemd:
+    name: nfs
+    enabled: yes
+    state: started
+    masked: no
+
+- name: Allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
