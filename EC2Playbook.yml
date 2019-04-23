@@ -48,7 +48,7 @@
       shell: /bin/bash
       uid: '{{ item.uid }}'
       createhome: yes
-      home: "/home/{{ item.username }}"
+      home: "/users/{{ item.username }}"
       comment: 'create with anisble'
       append: yes
     with_items: '{{ users }}'
