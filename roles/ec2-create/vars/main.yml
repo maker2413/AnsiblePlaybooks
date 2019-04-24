@@ -2,8 +2,8 @@
 # vars file for ec2-create
 iam: SquidsEC2Role
 ami: ami-061392db613a6357b
-subnet: subnet-e193daaa
-# Squids-SSH-Inbound, Squids-SSH-Outbound, Squids-EFS-Outbound
-security_group: [sg-0bfd49922588518b9, sg-0622671a52e59671b, sg-0ac1003235ab75f7a]
+subnet: subnet-03c548e74b900b2f3
+# Squids-SSH-Server, Squids-SSH-Client, Squids-EFS-Client
+security_group: [sg-04826ddc7382db996, sg-0ebcfb5c3cbd9b78c, sg-074edddf8773ea809]
 vol_size: 16
 proj_tag: Squids
