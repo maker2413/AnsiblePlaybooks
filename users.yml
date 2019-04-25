@@ -3,3 +3,7 @@ users:
   - username: maker
     use_sudo: yes
     uid: 2413
+users:
+  - username: dustin
+    use_sudo: yes
+    uid: 6857
