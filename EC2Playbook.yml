@@ -6,9 +6,9 @@
   vars:
     region: us-west-2
     instance_type: "{{ inst_type | default('t2.micro') }}"
-    username: "{{ user | default('maker') }}"
-    keypair: "{{ key | default('makersquids') }}"
-    name_tag: "{{ username }}-dev"
+    username: "{{ user | default('epost') }}"
+    keypair: "{{ key | default('epostsquids') }}"
+    name_tag: "SquidsDevelopment"
     ec2build: true
   tasks:
   - name: Add override host

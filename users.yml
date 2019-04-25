@@ -1,9 +1,9 @@
 ---
 users:
-  - username: maker
+  - username: epost
     use_sudo: yes
     uid: 2413
 users:
-  - username: dustin
+  - username: dpruitt
     use_sudo: yes
     uid: 6857
