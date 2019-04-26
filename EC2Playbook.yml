@@ -68,3 +68,19 @@
       state: present
     when: item.use_sudo
     with_items: '{{ users }}'
+
+  - name: Upload dns script to remote machine
+    copy:
+      src: misc_scripts/dns.sh
+      dest: /etc/init.d/dns
+      owner: root
+      group: root
+      mode: '755'
+
+  - name: Link dns script to /etc/rc.d/
+    file:
+      src: /etc/init.d/dns
+      dest: /etc/rc.d/dns
+      owner: root
+      group: root
+      state: link
