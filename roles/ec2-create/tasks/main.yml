@@ -15,7 +15,7 @@
       - device_name: /dev/xvda
         volume_type: gp2
         volume_size: "{{ vol_size }}"
-        delte_on_termination: yes
+        delete_on_termination: yes
         tags:
           - Project: "{{ proj_tag }}"
     count_tag:
