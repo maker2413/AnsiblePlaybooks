@@ -52,6 +52,7 @@
       home: "/users/{{ item.username }}"
       comment: 'create with anisble'
       append: yes
+      group: apache
     with_items: '{{ users }}'
 
   - name: Setup | authorized key upload

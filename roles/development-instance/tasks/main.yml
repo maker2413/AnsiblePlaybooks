@@ -1,6 +1,7 @@
 ---
 # tasks file for development-instance
-- name:  Add the epel repo
+- name:
+    Add the epel repo
   yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
 
 - name: Update all packages to latest

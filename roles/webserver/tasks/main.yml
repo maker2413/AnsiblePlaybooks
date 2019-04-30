@@ -1,0 +1,18 @@
+---
+# tasks file for webserver
+- name: Install Lamp Stack
+  shell: "amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2"
+
+- name: Install httpd
+  yum:
+    state: present
+    update_cache: yes
+    name:
+      - httpd
+      - mariadb-server
+
+- name: Enable httpd service
+  service:
+    name: httpd
+    state: started
+    enabled: yes
