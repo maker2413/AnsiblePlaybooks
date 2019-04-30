@@ -10,7 +10,7 @@
 - name: Mount up /users
   mount:
     path: /users
-    src: fs-7226d0d9:/
+    src: "{{ efs }}:/"
     fstype: efs
     opts: defaults,_netdev
     state: mounted

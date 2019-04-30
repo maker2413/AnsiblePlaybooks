@@ -17,6 +17,7 @@
       - tmux
       - ansible
       - python2-boto
+      - emacs
 
 - name: enable service nfs and ensure it is not masked
   systemd:
