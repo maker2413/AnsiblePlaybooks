@@ -1,5 +1,5 @@
 ---
-# tasks file for ec2-instance
+# tasks file for ec2-create
 
 - name: create a new developer ec2 instance
   ec2:
