@@ -29,7 +29,7 @@
   vars:
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
     efsmount: true
-    jenkins: true
+    jenkins: false
 
   roles:
     - dns-script
@@ -54,7 +54,6 @@
       home: "/users/{{ item.username }}"
       comment: 'create with anisble'
       append: yes
-      group: apache
     with_items: '{{ users }}'
 
   - name: Setup | authorized key upload
