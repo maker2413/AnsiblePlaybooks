@@ -32,8 +32,8 @@
     jenkins: false
 
   roles:
-    - dns-script
     - development-instance
+    - ddclient
     - { role: 'efs-mount', when: efsmount }
     - { role: 'jenkins-install', when: jenkins }
 

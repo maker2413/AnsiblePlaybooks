@@ -1,0 +1,17 @@
+---
+# tasks file for ddclient
+- name: Install ddclient
+  yum:
+    name: ddclient
+    state: present
+
+- name: Configure ddclient
+  template:
+    src: ddclient.conf.j2
+    dest: "{{ ddclient_conf_path }}"
+
+- name: Start and enable ddclient
+  service:
+    name: ddclient
+    state: started
+    enabled: yes

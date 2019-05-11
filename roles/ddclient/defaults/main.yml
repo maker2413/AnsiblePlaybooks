@@ -1,0 +1,11 @@
+---
+# defaults file for ddclient
+ddclient_conf_path: /etc/ddclient.conf
+
+ddclient_daemon: 1800
+ddclient_syslog: yes
+ddclient_pid: /var/run/ddclient/ddclient.pid
+ddclient_ssl: yes
+ddclient_protocol: namecheap
+ddclient_server: dynamicdns.park-your-domain.com
+ddclient_use: web, web=dynamicdns.park-your-domain.com/getip
