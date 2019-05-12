@@ -2,7 +2,7 @@
 # tasks file for jenkins-install
 
 # Include admin password and username
-- include_vars: vault.yml
+- include_vars: password.yml
 
 - name: Ensure Java is installed
   package:
@@ -13,7 +13,7 @@
 - name: Define Jenkins Repo
   set_fact:
     jenkins_repo: "{{ jenkins_repo }}"
-    jenkins_key: "{{ jenkins_repo_key }}"
+    jenkins_key: "{{ jenkins_key }}"
     jenkins_pkg: "{{ jenkins_pkg }}"
     jenkins_version: "{{ jenkins_version }}"
     jenkins_home: "{{ jenkins_home }}"
