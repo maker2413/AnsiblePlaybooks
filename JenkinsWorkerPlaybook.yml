@@ -39,7 +39,7 @@
   gather_facts: False
   vars:
     region: us-west-2
-    proj_tag: LPIP
+    proj_tag: Squids
     ami_name: jenkins-worker
 
   tasks:
