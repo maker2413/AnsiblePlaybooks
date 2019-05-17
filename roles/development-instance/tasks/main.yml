@@ -17,6 +17,7 @@
       - amazon-efs-utils
       - tmux
       - ansible
+      - python-boto3
       - python2-boto
       - emacs
 
