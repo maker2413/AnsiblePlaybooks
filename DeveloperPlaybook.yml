@@ -1,4 +1,4 @@
-- name: Create a new EC2 developer Instance
+- name: Create an EC2 Instance With Everything Installed
   hosts: localhost
   connection: local
   gather_facts: false
@@ -7,7 +7,7 @@
     region: us-west-2
     instance_type: "{{ inst_type | default('t2.micro') }}"
     username: "{{ user | default('epost') }}"
-    keypair: "{{ key | default('epostsquids') }}"
+    keypair: "{{ key | default('jenkinssquids') }}"
     name_tag: "SquidsDevelopment"
     ec2build: true
   tasks:
@@ -29,13 +29,11 @@
   vars:
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
     efsmount: true
-    jenkins: false
 
   roles:
     - development-instance
     - ddclient
     - { role: 'efs-mount', when: efsmount }
-    - { role: 'jenkins-install', when: jenkins }
 
   tasks:
   - include_vars: users.yml
