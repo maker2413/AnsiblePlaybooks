@@ -1,4 +1,4 @@
-- name: Create a EROS Jenkins Worker AMI
+- name: Create a Jenkins Worker AMI
   hosts: localhost
   connection: local
   gather_facts: False
