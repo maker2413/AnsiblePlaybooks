@@ -1,31 +1,16 @@
 ---
 # defaults file for jenkins-install
-jenkins_package_state: present
-
-jenkins_connection_delay: 5
-jenkins_connection_retries: 60
 jenkins_home: /var/lib/jenkins
-jenkins_hostname: localhost
 jenkins_http_port: 8080
-jenkins_jar_location: /opt/jenkins-cli.jar
-jenkins_url_prefix: ""
+jenkins_http_port_param: 8080
+jenkins_init_file: /etc/sysconfig/jenkins
+jenkins_java_options_env_var: JENKINS_JAVA_OPTIONS
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
+jenkins_jar_location: /opt/jenkins-cli.
+jenkins_url_prefix: ""
 
-jenkins_plugins: [
-ansible,
-ansicolor,
-ec2,
-git ]
-jenkins_plugins_state: present
-jenkins_plugin_updates_expiration: 86400
-jenkins_plugin_timeout: 30
-jenkins_plugins_install_dependencies: true
-jenkins_updates_url: "https://updates.jenkins.io"
-
-jenkins_admin_password_file: ""
-
-jenkins_process_user: jenkins
-jenkins_process_group: "{{ jenkins_process_user }}"
+jenkins_user: jenkins
+jenkins_group: "{{ jenkins_user }}"
 
 jenkins_init_changes:
   - option: "JENKINS_ARGS"

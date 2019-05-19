@@ -1,24 +1,17 @@
 ---
 # tasks file for jenkins-install
 
-# Include admin password and username
-- include_vars: password.yml
+- name: Include password vault
+  include_vars: password.yml
 
+# Install Java and dependencies
 - name: Ensure Java is installed
   package:
     name:
       - java-1.8.0-openjdk
     state: present
 
-- name: Define Jenkins Repo
-  set_fact:
-    jenkins_repo: "{{ jenkins_repo }}"
-    jenkins_key: "{{ jenkins_key }}"
-    jenkins_pkg: "{{ jenkins_pkg }}"
-    jenkins_version: "{{ jenkins_version }}"
-    jenkins_home: "{{ jenkins_home }}"
-
-- name: Ensure dependecies are installed
+- name: Install dependencies
   package:
     name:
       - curl
@@ -26,37 +19,37 @@
       - initscripts
     state: present
 
-- name: Ensure Jenkins repo is installed
+# Setup jenkins repo
+- name: Download jenkins.repo
   get_url:
-    url: "{{ jenkins_repo }}"
+    url: "{{ jenkins_repo_url }}"
     dest: /etc/yum.repos.d/jenkins.repo
 
-- name: Add Jenkins repo GPG key
+- name: Import Jenkins Key
   rpm_key:
     state: present
     key: "{{ jenkins_repo_key }}"
 
-- name: Download specific Jenkins version
-  get_url:
-    url: "{{ jenkins_pkg }}/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
-    dest: "/tmp/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
-
-- name: Install our specific version of Jenkins
-  package:
-    name: "/tmp/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
+# Install Jenkins
+- name: Install Jenkins
+  yum:
+    name: jenkins
     state: present
-  notify: configure default users
 
 # Configure Jenkins init settings
 - include_tasks: settings.yml
 
-# Make sure Jenkins starts, then configure Jenkins.
-- name: Ensure Jenkins is started and runs on startup.
-  service: name=jenkins state=started enabled=yes
+# Start and Enable Jenkins
+- name: Start and Enable Jenkins
+  service:
+    name: jenkins
+    state: started
+    enabled: true
 
-- name: Wait for Jenkins to start up before proceeding.
+# Make sure Jenkins starts before configuring
+- name: Wait for Jenkins to start up before proceeding
   command: >
-    curl -D - --silent --max-time 5 http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/cli/
+    curl -D - --silent --max-time 5 http://localhost:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/cli/
   args:
     warn: false
   register: result
@@ -64,14 +57,14 @@
     (result.stdout.find("403 Forbidden") != -1)
     or (result.stdout.find("200 OK") != -1)
     and (result.stdout.find("Please wait while") == -1)
-  retries: "{{ jenkins_connection_retries }}"
-  delay: "{{ jenkins_connection_delay }}"
+  retries: 5
+  delay: 60
   changed_when: false
   check_mode: false
 
 - name: Get the jenkins-cli jarfile from the Jenkins server.
   get_url:
-    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/jnlpJars/jenkins-cli.jar"
+    url: "http://localhost:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/jnlpJars/jenkins-cli.jar"
     dest: "{{ jenkins_jar_location }}"
   register: jarfile_get
   until: "'OK' in jarfile_get.msg or '304' in jarfile_get.msg or 'file already exists' in jarfile_get.msg"
@@ -81,7 +74,7 @@
 
 - name: Remove Jenkins security init scripts after first startup.
   file:
-    path: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
+    path: "{{ jenkins_home }}/init.groovy.d/security.groovy"
     state: absent
 
 # Update Jenkins and install configured plugins.

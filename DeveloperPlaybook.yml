@@ -9,6 +9,7 @@
     username: "{{ user | default('epost') }}"
     keypair: "{{ key | default('jenkinssquids') }}"
     name_tag: "SquidsDevelopment"
+    var_type: "{{ var_type | default('developer') }}"
     ec2build: true
   tasks:
   - name: Add override host
