@@ -14,7 +14,7 @@ import jenkins.model.Jenkins
 
 // parameters
 def SlaveTemplateUsEast1Parameters = [
-    ami:                      'ami-0498d949ee286578f',
+    ami:                      '''{{ ec2_ami }}''',
     associatePublicIp:        false,
     connectBySSHProcess:      true,
     connectUsingPublicIp:     false,
@@ -22,7 +22,7 @@ def SlaveTemplateUsEast1Parameters = [
     deleteRootOnTermination:  true,
     description:              'Jenkins slave EC2 US West 2',
     ebsOptimized:             false,
-    iamInstanceProfile:       'arn:aws:iam::574826924367:instance-profile/Profile-LSDS-JenkinsMaster',
+    iamInstanceProfile:       '''{{ ec2_iam_profile }}''',
     idleTerminationMinutes:   '5',
     initScript:               '',
     instanceCapStr:           '5',
@@ -32,12 +32,12 @@ def SlaveTemplateUsEast1Parameters = [
     numExecutors:             '1',
     remoteAdmin:              'ec2-user',
     remoteFS:                 '',
-    securityGroups:           'sg-0d10c698f4475d184, sg-0e7e5fc0c08587980, sg-0ef8fe4c5f83581d5, sg-07169843fd464cc9f',
+    securityGroups:           '''{{ ec2_sg }}''',
     stopOnTerminate:          false,
-    subnetId:                 'subnet-08f1118dd59133513',
+    subnetId:                 '''{{ ec2_subnet }}''',
     tags:                     new EC2Tag('Name', 'jenkins-worker'),
     tmpDir:                   '',
-    type:                     't3.medium',
+    type:                     't2.micro',
     useDedicatedTenancy:      false,
     useEphemeralDevices:      true,
     usePrivateDnsName:        true,

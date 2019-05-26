@@ -3,6 +3,9 @@
 - name: Include private key variable file
   include_vars: pem.yml
 
+- name: Include variables for ec2 plugin config
+  include_vars: ec2.yml
+
 # move groovy scripts into init.groovy.d
 - name: Configure Jenkins with groovy scirpts
   template:
