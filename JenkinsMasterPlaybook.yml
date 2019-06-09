@@ -14,23 +14,23 @@
     keypair: "jenkinssquids" # pem file name
     instance_type: "t2.micro"
     var_type: "{{ my_var_type | default('jenkins') }}"
-    build_jenkins_instance: yes
+    build_instance: true
   tasks:
     - name: Add override host
       when: override_host is defined
       add_host:
         hostname: "{{ override_host }}"
-        groups: jenkins_server
+        groups: jenkins_instance
       changed_when: false
 
   roles:
     - role: 'ec2-create'
-      when: build_jenkins_instance
+      when: build_instance | bool
 
 - name: Configure Jenkins instance
   hosts:
-    - jenkins_server
-    - ec2_server
+    - jenkins_instance
+    - ec2_instance
   remote_user: ec2-user
   become: True
   gather_facts: True
@@ -45,13 +45,20 @@
 
   tasks:
     - name:  Add the epel repo
-      yum: name='https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' state=present
+      yum: 
+        lock_timeout: 180
+        name: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
+        state: present
 
     - name:  Add the IUS repo
-      yum: name='https://centos7.iuscommunity.org/ius-release.rpm' state=present
+      yum:
+        lock_timeout: 180
+        name: 'https://centos7.iuscommunity.org/ius-release.rpm'
+        state: present
       
     - name: Install Needed Software
       yum:
+        lock_timeout: 180
         name:
           - git2u
           - git-lfs

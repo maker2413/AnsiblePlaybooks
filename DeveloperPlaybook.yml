@@ -16,14 +16,14 @@
     when: override_host is defined
     add_host:
       hostname: "{{ override_host }}"
-      groups: ec2_server
+      groups: ec2_instance
     changed_when: false
 
   roles:
     - { role: 'ec2-create', when: ec2build }
 
 - name: Configure instance
-  hosts: ec2_server
+  hosts: ec2_instance
   remote_user: ec2-user
   become: True
   gather_facts: True

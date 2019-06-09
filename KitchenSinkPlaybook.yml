@@ -6,36 +6,44 @@
   vars:
     region: us-west-2
     instance_type: "{{ inst_type | default('t2.micro') }}"
-    username: "{{ user | default('epost') }}"
-    keypair: "{{ key | default('epostsquids') }}"
-    name_tag: "SquidsDevelopment"
+    keypair: "{{ key | default('jenkinssquids') }}"
+    name_tag: "KitchenSink"
+    proj_tag: "Squids"
+    var_type: "{{ my_var_type | default('jenkins') }}"
     ec2build: true
   tasks:
   - name: Add override host
     when: override_host is defined
     add_host:
       hostname: "{{ override_host }}"
-      groups: ec2_server
+      groups: ec2_instance
     changed_when: false
 
   roles:
-    - { role: 'ec2-create', when: ec2build }
+    - role: 'ec2-create'
+      when: ec2build | bool
 
 - name: Configure instance
-  hosts: ec2_server
+  hosts: ec2_instance
   remote_user: ec2-user
   become: True
   gather_facts: True
   vars:
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
     efsmount: true
-    jenkins: false
+    jenkins: true
 
   roles:
     - development-instance
     - ddclient
-    - { role: 'efs-mount', when: efsmount }
-    - { role: 'jenkins-install', when: jenkins }
+    - role: 'efs-mount'
+      when: efsmount | bool
+    - role: 'jenkins-install'
+      when: jenkins | bool
+      become: yes
+    - role: 'jenkins-configure'
+      when: jenkins | bool
+      become: yes
 
   tasks:
   - include_vars: users.yml

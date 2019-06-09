@@ -2,6 +2,7 @@
 # tasks file for ddclient
 - name: Install ddclient
   yum:
+    lock_timeout: 180
     name: ddclient
     state: present
 
