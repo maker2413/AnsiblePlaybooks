@@ -1,0 +1,68 @@
+# To run this playbook you need to provide a private key that match the keypair listed below
+# you also need to provide a vault password file that contains the vault password
+# this password can be found in secrets manager if you don't already have it
+
+- name: Create a new Jenkins instance
+  hosts: localhost
+  connection: local
+
+  vars:
+    region: us-west-2
+    project_tag: LPIP
+    name_tag: "JenkinsMaster"
+    proj_tag: "Squids"
+    keypair: "jenkinssquids" # pem file name
+    instance_type: "t2.micro"
+    var_type: "{{ my_var_type | default('jenkins') }}"
+    build_instance: true
+  tasks:
+    - name: Add override host
+      when: override_host is defined
+      add_host:
+        hostname: "{{ override_host }}"
+        groups: jenkins_instance
+      changed_when: false
+
+  roles:
+    - role: 'ec2-create'
+      when: build_instance | bool
+
+- name: Configure Jenkins instance
+  hosts:
+    - jenkins_instance
+    - ec2_instance
+  remote_user: ec2-user
+  become: True
+  gather_facts: True
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
+  roles:
+    - role: jenkins-install
+      become: yes
+    - role: jenkins-configure
+      become: yes
+
+  tasks:
+    - name:  Add the epel repo
+      yum: 
+        lock_timeout: 180
+        name: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
+        state: present
+
+    - name:  Add the IUS repo
+      yum:
+        lock_timeout: 180
+        name: 'https://centos7.iuscommunity.org/ius-release.rpm'
+        state: present
+      
+    - name: Install Needed Software
+      yum:
+        lock_timeout: 180
+        name:
+          - git2u
+          - git-lfs
+          - ansible
+          - python-boto3
+          - python2-boto
+        state: present

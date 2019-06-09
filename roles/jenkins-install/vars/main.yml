@@ -1,8 +1,15 @@
 ---
 # vars file for jenkins-install
-jenkins_repo: https://pkg.jenkins.io/redhat/jenkins.repo
-jenkins_key: https://pkg.jenkins.io/redhat/jenkins.io.key
-jenkins_pkg: https://pkg.jenkins.io/redhat
-jenkins_init_file: /etc/sysconfig/jenkins
-jenkins_http_port_param: 8080
-jenkins_java_options_env_var: JENKINS_JAVA_OPTIONS
+jenkins_repo_url: https://pkg.jenkins.io/redhat/jenkins.repo
+jenkins_repo_key: https://pkg.jenkins.io/redhat/jenkins.io.key
+
+jenkins_plugins: [
+ansible,
+ansicolor,
+aws-bucket-credentials,
+aws-credentials,
+copyartifact,
+{ name: "ec2", version: "1.41" },
+git,
+node-iterator-api,
+ws-cleanup ]
