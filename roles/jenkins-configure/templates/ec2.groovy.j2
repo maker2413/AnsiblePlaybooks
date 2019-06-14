@@ -35,7 +35,7 @@ def SlaveTemplateUsEast1Parameters = [
     securityGroups:           '''{{ ec2_sg }}''',
     stopOnTerminate:          false,
     subnetId:                 '''{{ ec2_subnet }}''',
-    tags:                     new EC2Tag('Name', 'jenkins-worker'),
+    tags:                     new EC2Tag('Name', 'JenkinsWorker'),
     tmpDir:                   '',
     type:                     't2.micro',
     useDedicatedTenancy:      false,
@@ -70,7 +70,7 @@ AWSCredentialsImpl aWSCredentialsImpl = new AWSCredentialsImpl(
     AWSCredentialsImplParameters.description
 )
 
- SpotConfiguration spotConfig = new SpotConfiguration(".05");
+SpotConfiguration spotConfig = null
 
 // https://github.com/jenkinsci/ec2-plugin/blob/ec2-1.38/src/main/java/hudson/plugins/ec2/SlaveTemplate.java
 SlaveTemplate slaveTemplateUsEast1 = new SlaveTemplate(
