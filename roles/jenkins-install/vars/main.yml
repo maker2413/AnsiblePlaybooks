@@ -10,7 +10,7 @@ aws-bucket-credentials,
 aws-credentials,
 blueocean,
 copyartifact,
-{ name: "ec2", version: "1.41" },
+{ name: "ec2", version: "1.43" },
 git,
 node-iterator-api,
 ws-cleanup ]
