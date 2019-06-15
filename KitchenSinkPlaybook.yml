@@ -9,7 +9,7 @@
     keypair: "{{ key | default('jenkinssquids') }}"
     name_tag: "KitchenSink"
     proj_tag: "Squids"
-    var_type: "{{ my_var_type | default('jenkins') }}"
+    var_type: "{{ my_var_type | default('kitchen') }}"
     ec2build: true
   tasks:
   - name: Add override host

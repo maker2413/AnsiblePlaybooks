@@ -7,8 +7,10 @@
     region: us-west-2
     keypair: "jenkinssquids" # pem file name
     instance_type: "{{ my_inst_type | default('t2.micro') }}"
-    ec2build: true
     name_tag: "jenkins-worker-ami-builder"
+    proj_tag: "Squids"
+    var_type: "{{ my_var_type | default('jenkinsworker') }}"
+    ec2build: true
   tasks:
   - name: Add override host
     when: override_host is defined
@@ -18,7 +20,8 @@
     changed_when: false
 
   roles:
-    - { role: 'ec2-create', when: ec2build }
+    - role: 'ec2-create'
+      when: ec2build | bool
 
 - name: Configure instance(s)
   hosts: ec2_server
@@ -31,7 +34,8 @@
 
   roles:
     - jenkins-worker
-    - { role: 'efs-mount', when: efsmount }
+    - role: 'efs-mount'
+      when: efsmount | bool
 
 - name: Start AMI build process
   hosts: localhost
@@ -61,6 +65,7 @@
 
     - name : Create AMI
       ec2_ami:
+        delete_snapshot: yes
         instance_id: "{{ ec2_provision_result.instances[0].id }}"
         wait: yes
         delete_snapshot: yes

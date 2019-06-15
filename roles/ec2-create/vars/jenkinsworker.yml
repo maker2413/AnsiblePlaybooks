@@ -1,0 +1,4 @@
+---
+# Jenkins Worker instance vars
+iam: SquidsEC2Role
+security_group: [sg-055951f82cecb3835]
