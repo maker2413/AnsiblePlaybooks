@@ -59,13 +59,13 @@
 
     - name: Deregister AMI if it exists
       ec2_ami:
+        delete_snapshot: yes
         image_id: "{{ myami.images[0].image_id }}"
         state: absent
       when: myami.images | length and myami.images[0].state == 'available'
 
     - name : Create AMI
       ec2_ami:
-        delete_snapshot: yes
         instance_id: "{{ ec2_provision_result.instances[0].id }}"
         wait: yes
         delete_snapshot: yes

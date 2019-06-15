@@ -4,5 +4,4 @@
 ami: ami-061392db613a6357b
 subnet: subnet-0f9f4971177ba090f
 # Squids-SSH-Server, Squids-EFS-Client
-vol_size: 16
 proj_tag: Squids

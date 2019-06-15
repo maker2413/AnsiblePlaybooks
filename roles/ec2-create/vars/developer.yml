@@ -2,3 +2,4 @@
 # developer instance vars
 iam: SquidsEC2Role
 security_group: [sg-055951f82cecb3835, sg-03685ee4778256b20]
+vol_size: 16
