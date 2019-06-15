@@ -1,7 +1,7 @@
 ---
 # vars used to configure the ec2 plugin
-ec2_ami: ami-0938e21a4e1e539e7
+ec2_ami: ami-0b23c52e74efbca5f
 ec2_iam_profile: arn:aws:iam::803970772237:instance-profile/SquidsEC2Role
 # SSH_Server, Web_Server
-ec2_sg: sg-055951f82cecb3835, sg-0c7b07e0a51b9974e
+ec2_sg: sg-055951f82cecb3835
 ec2_subnet: subnet-0f9f4971177ba090f
