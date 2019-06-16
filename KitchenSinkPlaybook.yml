@@ -1,3 +1,7 @@
+# To run this playbook you need to provide a private key that matches the keypair lsited below
+# you also need to provide a vault password file that contains the vault password
+# this password can be found in secrets manager if you don't already have it
+
 - name: Create an EC2 Instance With Everything Installed
   hosts: localhost
   connection: local
