@@ -22,7 +22,8 @@
     changed_when: false
 
   roles:
-    - { role: 'ec2-create', when: ec2build }
+    - role: 'ec2-create'
+      when: ec2build | bool
 
 - name: Configure instance
   hosts: ec2_instance
@@ -31,12 +32,14 @@
   gather_facts: True
   vars:
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+    var_type: "{{ var_type | default('developer') }}"
     efsmount: true
 
   roles:
     - development-instance
     - ddclient
-    - { role: 'efs-mount', when: efsmount }
+    - role: 'efs-mount'
+      when: efsmount | bool
 
   tasks:
   - include_vars: users.yml

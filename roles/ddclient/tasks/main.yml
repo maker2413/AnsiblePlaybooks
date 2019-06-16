@@ -1,5 +1,8 @@
 ---
 # tasks file for ddclient
+- name: Include appropriate vars file
+  include_vars: "{{ var_type }}.yml"
+
 - name: Install ddclient
   yum:
     lock_timeout: 180
