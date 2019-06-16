@@ -1,6 +1,5 @@
 ---
 # vars file for ddclient
-ddclient_subdomain: ssh   # {{mysubdomain}}.example.com
 ddclient_login: ethanp.dev
 ddclient_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256

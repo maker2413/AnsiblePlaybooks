@@ -1,3 +1,5 @@
+# To run this playbook you need to provide a private key that matches the keypair lsited below
+
 - name: Create a Jenkins Worker AMI
   hosts: localhost
   connection: local

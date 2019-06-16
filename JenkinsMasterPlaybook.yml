@@ -36,8 +36,10 @@
   gather_facts: True
   vars:
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+    var_type: "{{ my_var_type | default('jenkins') }}"
 
   roles:
+    - ddclient
     - role: jenkins-install
       become: yes
     - role: jenkins-configure
