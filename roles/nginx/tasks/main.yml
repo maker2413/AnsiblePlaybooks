@@ -1,0 +1,74 @@
+---
+# tasks file for nginx
+# Description: Nginx Install and Config
+
+- name: Install Nginx
+  yum:
+    name: nginx
+    state: latest
+
+- name: Main Nginx Config
+  template:
+    src: "nginx.conf.j2"
+    dest: "/etc/nginx/nginx.conf"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: Create available and enabled dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - "/etc/nginx/conf.d/available"
+    - "/etc/nginx/conf.d/enabled"
+
+- name: Create Jenkins logging dir
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - "/var/log/nginx/jenkins"
+
+- name: Available Site Configs
+  template:
+    src: "jenkins-proxy.conf.j2"
+    dest: "/etc/nginx/conf.d/available/jenkins-proxy.conf"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: Enabled Site Links
+  file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    owner: root
+    group: root
+    force: yes
+  with_items:
+    - src: "/etc/nginx/conf.d/available/jenkins-proxy.conf"
+      dest: "/etc/nginx/conf.d/enabled/jenkins-proxy.conf"
+
+- name: Check for dhparam file
+  stat:
+    path: "/etc/nginx/dhparams.pem"
+  register: nginx_dhparams
+
+- name: Create dhparams.pem if it does not exist
+  command: "openssl dhparam -out /etc/nginx/dhparams.pem 2048"
+  when: nginx_dhparams.stat.exists == False
+
+- name: Start nginx
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes

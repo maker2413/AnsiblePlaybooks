@@ -1,0 +1,81 @@
+####========================================
+#### This Config Managed by Ansible
+#### Role: jenkins-master
+#### Local changes will be overwritten!
+####========================================
+## NGINX - Main Configuration ##
+ 
+# Context: Main - General Server Configuration
+ 
+# User that worker processes run as
+user  nginx;
+ 
+# Number of worker processes (auto = set to number of CPUs)
+worker_processes  auto;
+ 
+# Error Log and PID of main process
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+ 
+ 
+# Context: Events - Connection Processing
+events {
+  # Max number of connections per worker process
+  worker_connections  1024;
+}
+ 
+# Context: HTTP - HTTP Server Directives
+http {
+  # MIME - Include file and default type
+  include       /etc/nginx/mime.types;
+  default_type  application/octet-stream;
+ 
+  # Logging: Format and Main Access Log
+  log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+  access_log  /var/log/nginx/access.log  main;
+ 
+  # server_tokens off - Disable nginx version on error pages and response headers
+  server_tokens off;
+ 
+  ## Headers - Add additional headers ##
+  # X-Frame-Options SAMEORIGIN -> Page can only be displayed in a frame on same origin
+  add_header X-Frame-Options SAMEORIGIN;
+ 
+  # X-Content-Type-Options nosniff -> Prevent MIME Type Attacks
+  add_header X-Content-Type-Options nosniff;
+ 
+  # X-XSS-Protection "1; mode=block" -> Prevent Some Cross Site Scripting
+  #   1;mode=block -> XSS filter enabled, prevent rendering the page if attack detected
+  add_header X-XSS-Protection "1; mode=block" always;
+ 
+  # Content-Security-Policy -> Prevent XSS, clickjacking, code injection
+  add_header Content-Security-Policy "default-src 'self';" always;
+ 
+  # Combined directives: sendfile, tcp_nopush, tcp_nodelay all on
+  # sendfile+tcp_nopush = use kernel dma to fill packets up to MSS, then send
+  # tcp_nodelay = once the last packet is reached, tcp_nopush auto turned off,
+  #               then tcp_nodelay forces the fast sending of the last data
+ 
+  # Sendfile - Send files directly in kernel space
+  # on -> keep on for locally stored files
+  # off -> turn off for files served over network mounted storage
+  sendfile        on;
+ 
+  # tcp_nopush - Do not send data until packet reaches MSS
+  # Dependency: sendfile MUST be on for this to work
+  #tcp_nopush     on;
+ 
+  # tcp_nodelay -  Send packets in buffer as soon as they are available
+  #tcp_nodelay on;
+ 
+  # Server side keepalive timeout in seconds (default: 75)
+  keepalive_timeout  65;
+ 
+  # Gzip - Compress responses using gzip
+  #gzip  on;
+ 
+  # Include enabled configurations
+  include /etc/nginx/conf.d/enabled/*.conf;
+}
