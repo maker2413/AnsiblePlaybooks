@@ -3,7 +3,7 @@
 - name: Include appropriate vars file
   include_vars: "{{ var_type }}.yml"
 
-- name: create a new developer ec2 instance
+- name: Create a new developer ec2 instance
   ec2:
     key_name: "{{ keypair }}"
     group_id: "{{ security_group }}" # security group name

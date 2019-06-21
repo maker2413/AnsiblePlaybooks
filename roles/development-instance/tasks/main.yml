@@ -27,7 +27,7 @@
       - python2-boto
       - emacs
 
-- name: enable service nfs and ensure it is not masked
+- name: Enable service nfs and ensure it is not masked
   systemd:
     name: nfs
     enabled: yes
