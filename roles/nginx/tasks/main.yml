@@ -68,7 +68,7 @@
   when: nginx_dhparams.stat.exists == False
 
 - name: Start nginx
-  systemd:
+  service:
     name: nginx
     state: started
     enabled: yes
