@@ -30,9 +30,8 @@ server {
  
     # SSL - Certificate Config
     ssl on;
-    ssl_certificate /etc/pki/tls/lsds_certs/current_cr_usgs_gov_cert.crt;
-    ssl_certificate_key /etc/pki/tls/lsds_certs/current_cr_usgs_gov_key.key;
-    ssl_client_certificate /etc/pki/tls/lsds_certs/current_cr_usgs_gov_ca.crt;
+    ssl_certificate '{{ certificate_path }}'
+    ssl_certificate_key '{{ certificate_key_path }}'
  
     # SSL - Session Config
     ssl_session_timeout 5m;

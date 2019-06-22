@@ -1,6 +1,11 @@
 ---
 # tasks file for nginx
 # Description: Nginx Install and Config
+- name: Include appropriate vars file
+  include_vars:
+    - "{{ var_type }}.yml"
+    - "{{ var_type }}cert.yml"
+    - "{{ var_type }}key.yml"
 
 - name: Install Nginx
   yum:
@@ -27,6 +32,28 @@
     - "/etc/nginx/conf.d/available"
     - "/etc/nginx/conf.d/enabled"
 
+- name: Create ssl directory for nginx
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - "/etc/nginx/ssl"
+
+- name: Copy Cert and Cert Key over
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/nginx/ssl/{{ item }}"
+    owner: root
+    group: root
+    mode: 0600
+    backup: yes
+  with_items:
+    - "jenkins.crt"
+    - "jenkins.key"
+    
 - name: Create Jenkins logging dir
   file:
     path: "{{ item }}"

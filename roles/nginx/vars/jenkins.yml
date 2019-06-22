@@ -1,3 +1,5 @@
 ---
 # Jenkins dns
 dns: jenkins.ethanp.dev
+certificate_path: /etc/nginx/ssl/jenkins.crt
+certificate_key_path: /etc/nginx/ssl/jenkins.pem
