@@ -36,6 +36,7 @@
     efsmount: true
 
   roles:
+    - epel-ius
     - development-instance
     - ddclient
     - role: 'efs-mount'

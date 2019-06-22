@@ -2,10 +2,9 @@
 # tasks file for nginx
 # Description: Nginx Install and Config
 - name: Include appropriate vars file
-  include_vars:
-    - "{{ var_type }}.yml"
-    - "{{ var_type }}cert.yml"
-    - "{{ var_type }}key.yml"
+  include_vars: "{{ var_type }}.yml"
+  include_vars: "{{ var_type }}cert.yml"
+  include_vars: "{{ var_type }}key.yml"
 
 - name: Install Nginx
   yum:
