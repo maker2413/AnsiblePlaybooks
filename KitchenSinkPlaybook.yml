@@ -50,6 +50,7 @@
     - role: 'jenkins-configure'
       when: jenkins | bool
       become: yes
+    - nginx
 
   tasks:
   - include_vars: users.yml

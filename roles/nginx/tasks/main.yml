@@ -3,14 +3,14 @@
 # Description: Nginx Install and Config
 - name: Include appropriate vars file
   include_vars: "{{ var_type }}.yml"
-  include_vars: "{{ var_type }}cert.yml"
-  include_vars: "{{ var_type }}key.yml"
 
-- name: Install Nginx
+- name: Install Nginx and Letencrypt
   yum:
-    name: nginx
+    name:
+      - nginx
+      - letencrypt
     state: latest
-
+    
 - name: Main Nginx Config
   template:
     src: "nginx.conf.j2"
@@ -30,28 +30,6 @@
   with_items:
     - "/etc/nginx/conf.d/available"
     - "/etc/nginx/conf.d/enabled"
-
-- name: Create ssl directory for nginx
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-  with_items:
-    - "/etc/nginx/ssl"
-
-- name: Copy Cert and Cert Key over
-  template:
-    src: "{{ item }}.j2"
-    dest: "/etc/nginx/ssl/{{ item }}"
-    owner: root
-    group: root
-    mode: 0600
-    backup: yes
-  with_items:
-    - "jenkins.crt"
-    - "jenkins.key"
     
 - name: Create Jenkins logging dir
   file:
@@ -63,6 +41,16 @@
   with_items:
     - "/var/log/nginx/jenkins"
 
+- name: Create letsencrypt certificate
+    shell: "letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}"
+    args:
+      creates: "/etc/letsencrypt/live/{{ domain_name }}";
+
+- name: Generate dhparams
+    shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
+    args:
+    creates: /etc/nginx/dhparams.pem
+    
 - name: Available Site Configs
   template:
     src: "jenkins-proxy.conf.j2"
