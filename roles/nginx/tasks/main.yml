@@ -4,11 +4,11 @@
 - name: Include appropriate vars file
   include_vars: "{{ var_type }}.yml"
 
-- name: Install Nginx and Letencrypt
+- name: Install Nginx and Certbot
   yum:
     name:
       - nginx
-      - letencrypt
+      - python2-certbot-nginx
     state: latest
     
 - name: Main Nginx Config
@@ -41,14 +41,25 @@
   with_items:
     - "/var/log/nginx/jenkins"
 
+- name: Create Jenkins logging dir
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - "/etc/letsencrypt/live/"
+    - "/etc/letsencrypt/live/{{ domain_name }}"
+    
 - name: Create letsencrypt certificate
-    shell: "letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}"
-    args:
-      creates: "/etc/letsencrypt/live/{{ domain_name }}";
+  shell: letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}
+  args:
+    creates: "/etc/letsencrypt/live/{{ domain_name }}"
 
 - name: Generate dhparams
-    shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
-    args:
+  shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
+  args:
     creates: /etc/nginx/dhparams.pem
     
 - name: Available Site Configs
