@@ -20,7 +20,7 @@
     when: override_host is defined
     add_host:
       hostname: "{{ override_host }}"
-      groups: ec2_instance
+      groups: kitchen_instance
     changed_when: false
 
   roles:
