@@ -1,4 +1,6 @@
 # To run this playbook you need to provide a private key that matches the keypair lsited below
+# you also need to provide a vault password file that contains the vault password
+# this password can be found in secrets manager if you don't already have it
 
 - name: Create an EC2 Instance With Everything Installed
   hosts: localhost
@@ -11,14 +13,14 @@
     username: "{{ user | default('epost') }}"
     keypair: "{{ key | default('jenkinssquids') }}"
     name_tag: "SquidsDevelopment"
-    var_type: "{{ var_type | default('developer') }}"
+    var_type: "{{ my_var_type | default('developer') }}"
     ec2build: true
   tasks:
   - name: Add override host
     when: override_host is defined
     add_host:
       hostname: "{{ override_host }}"
-      groups: ec2_instance
+      groups: developer_instance
     changed_when: false
 
   roles:
@@ -32,7 +34,7 @@
   gather_facts: True
   vars:
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-    var_type: "{{ var_type | default('developer') }}"
+    var_type: "{{ my_var_type | default('developer') }}"
     efsmount: true
 
   roles:
@@ -64,7 +66,7 @@
   - name: Setup | authorized key upload
     authorized_key:
       user: "{{ item.username }}"
-      key: "{{ lookup('file', 'pub_keys/{{ item.username }}.pub') }}"
+      key: "{{ lookup('file', './pub_keys/{{ item.username }}.pub') }}"
     with_items: '{{ users }}'
 
   - name: sudoers | update sudoers file and validate

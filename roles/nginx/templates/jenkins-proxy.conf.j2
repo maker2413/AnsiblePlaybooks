@@ -30,8 +30,8 @@ server {
  
     # SSL - Certificate Config
     ssl on;
-    ssl_certificate '{{ certificate_path }}'
-    ssl_certificate_key '{{ certificate_key_path }}'
+    ssl_certificate '{{ certificate_path }}';
+    ssl_certificate_key '{{ certificate_key_path }}';
  
     # SSL - Session Config
     ssl_session_timeout 5m;

@@ -1,5 +1,7 @@
 localhost
-[ec2_instance]
+[developer_instance]
 0.0.0.0
 [jenkins_instance}
-34.223.230.16
+0.0.0.0
+[kitchen_instance]
+0.0.0.0
