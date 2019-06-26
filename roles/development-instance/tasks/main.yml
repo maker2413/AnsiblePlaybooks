@@ -1,11 +1,5 @@
 ---
 # tasks file for development-instance
-- name: Add the epel repo
-  yum:
-    lock_timeout: 180
-    name: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
-    state: present
-
 - name: Update all packages to latest
   yum:
     lock_timeout: 180
@@ -27,7 +21,7 @@
       - python2-boto
       - emacs
 
-- name: enable service nfs and ensure it is not masked
+- name: Enable service nfs and ensure it is not masked
   systemd:
     name: nfs
     enabled: yes

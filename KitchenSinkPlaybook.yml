@@ -20,7 +20,7 @@
     when: override_host is defined
     add_host:
       hostname: "{{ override_host }}"
-      groups: ec2_instance
+      groups: kitchen_instance
     changed_when: false
 
   roles:
@@ -39,6 +39,7 @@
     jenkins: true
 
   roles:
+    - epel-ius
     - development-instance
     - ddclient
     - role: 'efs-mount'
@@ -49,6 +50,7 @@
     - role: 'jenkins-configure'
       when: jenkins | bool
       become: yes
+#    - nginx
 
   tasks:
   - include_vars: users.yml

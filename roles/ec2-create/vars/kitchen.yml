@@ -1,5 +1,5 @@
 ---
 # Jenkins instance vars
 iam: SquidsEC2Role
-security_group: [sg-055951f82cecb3835, sg-03685ee4778256b20, sg-0e31c450e9b12fad8]
+security_group: [sg-055951f82cecb3835, sg-03685ee4778256b20, sg-0e31c450e9b12fad8, sg-00ee078cb8b41b62a]
 vol_size: 16

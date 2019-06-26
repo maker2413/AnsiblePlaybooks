@@ -7,3 +7,7 @@ users:
   - username: dpruitt
     use_sudo: yes
     uid: 6857
+
+  - username: cgerpen
+    use_sudo: yes
+    uid: 7001
