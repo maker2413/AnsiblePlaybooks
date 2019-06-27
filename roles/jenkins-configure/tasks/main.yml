@@ -6,6 +6,15 @@
 - name: Include variables for ec2 plugin config
   include_vars: ec2.yml
 
+- name: Make Jenkins Listen on Local Host
+  template:
+    src: "{{ item }}"
+    dest: /etc/sysconfig/jenkins
+    owner: root
+    group: root
+    mode: 600
+  with_items: jenkins-sysconfig.j2
+  
 # move groovy scripts into init.groovy.d
 - name: Configure Jenkins with groovy scirpts
   template:

@@ -30,7 +30,29 @@
   with_items:
     - "/etc/nginx/conf.d/available"
     - "/etc/nginx/conf.d/enabled"
-    
+
+- name: Available Site Configs
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/nginx/conf.d/available/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  with_items: "{{ nginx_confs }}"
+
+- name: Enabled Site Links
+  file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    owner: root
+    group: root
+    force: yes
+  with_items:
+    - src: "/etc/nginx/conf.d/available/jenkins-rproxy.conf"
+      dest: "/etc/nginx/conf.d/enabled/jenkins.conf"
+  
 - name: Create Jenkins logging dir
   file:
     path: "{{ item }}"
@@ -40,6 +62,12 @@
     mode: 0755
   with_items:
     - "/var/log/nginx/jenkins"
+
+- name: Start nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
 
 - name: Create Jenkins logging dir
   file:
@@ -53,7 +81,7 @@
     - "/etc/letsencrypt/live/{{ domain_name }}"
     
 - name: Create letsencrypt certificate
-  shell: letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}
+  shell: certbot certonly --nginx -n -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}
   args:
     creates: "/etc/letsencrypt/live/{{ domain_name }}"
 
@@ -61,15 +89,11 @@
   shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
   args:
     creates: /etc/nginx/dhparams.pem
-    
-- name: Available Site Configs
-  template:
-    src: "jenkins-proxy.conf.j2"
-    dest: "/etc/nginx/conf.d/available/jenkins-proxy.conf"
-    owner: root
-    group: root
-    mode: 0644
-    backup: yes
+
+- name: Delete old enabled conf
+  file:
+    path: /etc/nginx/conf.d/enabled/jenkins.conf
+    state: absent
 
 - name: Enabled Site Links
   file:
@@ -80,8 +104,8 @@
     group: root
     force: yes
   with_items:
-    - src: "/etc/nginx/conf.d/available/jenkins-proxy.conf"
-      dest: "/etc/nginx/conf.d/enabled/jenkins-proxy.conf"
+    - src: "/etc/nginx/conf.d/available/jenkins-rproxy-ssl.conf"
+      dest: "/etc/nginx/conf.d/enabled/jenkins.conf"
 
 - name: Check for dhparam file
   stat:
@@ -95,5 +119,5 @@
 - name: Start nginx
   service:
     name: nginx
-    state: started
+    state: restarted
     enabled: yes
