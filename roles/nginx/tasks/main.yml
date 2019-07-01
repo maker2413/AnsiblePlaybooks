@@ -78,7 +78,6 @@
     mode: 0755
   with_items:
     - "/etc/letsencrypt/live/"
-    - "/etc/letsencrypt/live/{{ domain_name }}"
     
 - name: Create letsencrypt certificate
   shell: certbot certonly --nginx -n -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}
