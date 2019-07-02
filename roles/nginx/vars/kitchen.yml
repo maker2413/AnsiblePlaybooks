@@ -3,7 +3,7 @@
 domain_name: jenkins.ethanp.dev
 certificate_path: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
 certificate_key_path: /etc/letsencrypt/live/{{ domain_name }}/privkey.pem
-nginx_confs: jenkins-rproxy.conf, jenkins-rproxy-ssl.conf
+web_server: jenkins
 letsencrypt_email: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           66663237323839613761366232653562393462303438663438363636623030613064323864666539

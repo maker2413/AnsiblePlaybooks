@@ -6,4 +6,5 @@ certificate_key_path: /etc/letsencrypt/live/{{ domain_name }}/privkey.pem
 nginx_confs:
   - jenkins-rproxy.conf
   - jenkins-rproxy-ssl.conf
+web_server: jenkins
 letsencrypt_email: admin@ethanp.dev

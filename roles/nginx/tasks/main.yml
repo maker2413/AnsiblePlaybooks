@@ -33,13 +33,13 @@
 
 - name: Available Site Configs
   template:
-    src: "{{ item }}.j2"
-    dest: "/etc/nginx/conf.d/available/{{ item }}"
+    src: "{{ item }}-rpoxy.conf.j2"
+    dest: "/etc/nginx/conf.d/available/{{ item }}-rproxy.conf"
     owner: root
     group: root
     mode: 0644
     backup: yes
-  with_items: "{{ nginx_confs }}"
+  with_items: "{{ web_server }}"
 
 - name: Enabled Site Links
   file:
@@ -50,73 +50,21 @@
     group: root
     force: yes
   with_items:
-    - src: "/etc/nginx/conf.d/available/jenkins-rproxy.conf"
-      dest: "/etc/nginx/conf.d/enabled/jenkins.conf"
+    - src: "/etc/nginx/conf.d/available/{{ web_server }}-rproxy.conf"
+      dest: "/etc/nginx/conf.d/enabled/{{ web_server }}.conf"
   
 - name: Create Jenkins logging dir
   file:
-    path: "{{ item }}"
+    path: "/var/log/nginx/{{ item }}"
     state: directory
     owner: root
     group: root
     mode: 0755
   with_items:
-    - "/var/log/nginx/jenkins"
+    - "{{ web_server }}"
 
 - name: Start nginx
   service:
     name: nginx
     state: started
-    enabled: yes
-
-- name: Create Jenkins logging dir
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-  with_items:
-    - "/etc/letsencrypt/live/"
-    
-- name: Create letsencrypt certificate
-  shell: certbot certonly --nginx -n -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}
-  args:
-    creates: "/etc/letsencrypt/live/{{ domain_name }}"
-
-- name: Generate dhparams
-  shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
-  args:
-    creates: /etc/nginx/dhparams.pem
-
-- name: Delete old enabled conf
-  file:
-    path: /etc/nginx/conf.d/enabled/jenkins.conf
-    state: absent
-
-- name: Enabled Site Links
-  file:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    state: link
-    owner: root
-    group: root
-    force: yes
-  with_items:
-    - src: "/etc/nginx/conf.d/available/jenkins-rproxy-ssl.conf"
-      dest: "/etc/nginx/conf.d/enabled/jenkins.conf"
-
-- name: Check for dhparam file
-  stat:
-    path: "/etc/nginx/dhparams.pem"
-  register: nginx_dhparams
-
-- name: Create dhparams.pem if it does not exist
-  command: "openssl dhparam -out /etc/nginx/dhparams.pem 2048"
-  when: nginx_dhparams.stat.exists == False
-
-- name: Start nginx
-  service:
-    name: nginx
-    state: restarted
     enabled: yes
