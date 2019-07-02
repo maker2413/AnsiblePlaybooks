@@ -46,6 +46,7 @@
     - role: jenkins-configure
       become: yes
     - nginx
+    - certbot
 
   tasks:
     - name: Install Needed Software

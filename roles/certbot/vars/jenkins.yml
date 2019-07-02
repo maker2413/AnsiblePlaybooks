@@ -1,0 +1,7 @@
+---
+# Jenkins Variables
+domain_name: jenkins.ethanp.dev
+certificate_path: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
+certificate_key_path: /etc/letsencrypt/live/{{ domain_name }}/privkey.pem
+web_server: jenkins
+letsencrypt_email: admin@ethanp.dev

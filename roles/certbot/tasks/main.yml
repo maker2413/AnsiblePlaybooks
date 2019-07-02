@@ -1,0 +1,64 @@
+---
+# tasks file for certbot
+- name: Include appropriate vars file
+  include_vars: "{{ var_type }}.yml"
+
+- name: Install Nginx and Certbot
+  yum:
+    name:
+      - python2-certbot-nginx
+    state: latest
+
+- name: Create Jenkins logging dir
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - "/etc/letsencrypt/live/"
+
+- name: Create letsencrypt certificate
+  shell: certbot certonly --nginx -n -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}
+  args:
+    creates: "/etc/letsencrypt/live/{{ domain_name }}"
+
+- name: Generate dhparams
+  shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
+  args:
+    creates: /etc/nginx/dhparams.pem
+
+- name: Delete old enabled conf
+  file:
+    path: "/etc/nginx/conf.d/enabled/{{ item }}.conf"
+    state: absent
+  with_items:
+    - "{{ web_server}}"
+
+- name: Enabled Site Links
+  file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    owner: root
+    group: root
+    force: yes
+  with_items:
+    - src: "/etc/nginx/conf.d/available/{{ web_server }}-rproxy-ssl.conf"
+      dest: "/etc/nginx/conf.d/enabled/{{ web_server }}.conf"
+
+- name: Check for dhparam file
+  stat:
+    path: "/etc/nginx/dhparams.pem"
+  register: nginx_dhparams
+
+- name: Create dhparams.pem if it does not exist
+  command: "openssl dhparam -out /etc/nginx/dhparams.pem 2048"
+  when: nginx_dhparams.stat.exists == False
+
+- name: Start nginx
+  service:
+    name: nginx
+    state: restarted
+    enabled: yes
