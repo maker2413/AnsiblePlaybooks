@@ -8,7 +8,6 @@
   yum:
     name:
       - nginx
-      - python2-certbot-nginx
     state: latest
     
 - name: Main Nginx Config

@@ -1,5 +1,14 @@
 ---
 # tasks file for certbot
+- name: Include appropriate vars file
+  include_vars: "{{ var_type }}.yml"
+
+- name: Install Nginx and Certbot
+  yum:
+    name:
+      - python2-certbot-nginx
+    state: latest
+
 - name: Create Jenkins logging dir
   file:
     path: "{{ item }}"
