@@ -1,3 +1,4 @@
+---
 # To run this playbook you need to provide a private key that match the keypair listed below
 # you also need to provide a vault password file that contains the vault password
 # this password can be found in secrets manager if you don't already have it
@@ -11,7 +12,7 @@
     project_tag: LPIP
     name_tag: "JenkinsMaster"
     proj_tag: "Squids"
-    keypair: "jenkinssquids" # pem file name
+    keypair: "jenkinssquids"  # pem file name
     instance_type: "t2.micro"
     var_type: "{{ my_var_type | default('jenkins') }}"
     build_instance: true
@@ -32,8 +33,8 @@
     - jenkins_instance
     - ec2_instance
   remote_user: ec2-user
-  become: True
-  gather_facts: True
+  become: true
+  gather_facts: true
   vars:
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
     var_type: "{{ my_var_type | default('jenkins') }}"
@@ -42,9 +43,9 @@
     - epel-ius
     - ddclient
     - role: jenkins-install
-      become: yes
+      become: true
     - role: jenkins-configure
-      become: yes
+      become: true
     - nginx
     - certbot
 

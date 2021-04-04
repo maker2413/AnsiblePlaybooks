@@ -1,25 +1,25 @@
+---
 # To run this playbook you need to provide a private key that matches the keypair lsited below
-
 - name: Create a Jenkins Worker AMI
   hosts: localhost
   connection: local
-  gather_facts: False
+  gather_facts: false
 
   vars:
     region: us-west-2
-    keypair: "jenkinssquids" # pem file name
+    keypair: "jenkinssquids"  # pem file name
     instance_type: "{{ my_inst_type | default('t2.micro') }}"
     name_tag: "jenkins-worker-ami-builder"
     proj_tag: "Squids"
     var_type: "{{ my_var_type | default('jenkinsworker') }}"
     ec2build: true
   tasks:
-  - name: Add override host
-    when: override_host is defined
-    add_host:
-      hostname: "{{ override_host }}"
-      groups: ec2_server
-    changed_when: false
+    - name: Add override host
+      when: override_host is defined
+      add_host:
+        hostname: "{{ override_host }}"
+        groups: ec2_server
+        changed_when: false
 
   roles:
     - role: 'ec2-create'
@@ -28,8 +28,8 @@
 - name: Configure instance(s)
   hosts: ec2_server
   remote_user: ec2-user
-  become: True
-  gather_facts: True
+  become: true
+  gather_facts: true
   vars:
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
     efsmount: false
@@ -42,7 +42,7 @@
 - name: Start AMI build process
   hosts: localhost
   connection: local
-  gather_facts: False
+  gather_facts: false
   vars:
     region: us-west-2
     proj_tag: Squids
@@ -61,16 +61,16 @@
 
     - name: Deregister AMI if it exists
       ec2_ami:
-        delete_snapshot: yes
+        delete_snapshot: true
         image_id: "{{ myami.images[0].image_id }}"
         state: absent
       when: myami.images | length and myami.images[0].state == 'available'
 
-    - name : Create AMI
+    - name: Create AMI
       ec2_ami:
         instance_id: "{{ ec2_provision_result.instances[0].id }}"
-        wait: yes
-        delete_snapshot: yes
+        wait: true
+        delete_snapshot: true
         name: "{{ ami_name }}"
         region: us-west-2
         tags:

@@ -1,3 +1,4 @@
+---
 # To run this playbook you need to provide a private key that matches the keypair lsited below
 # you also need to provide a vault password file that contains the vault password
 # this password can be found in secrets manager if you don't already have it
@@ -16,12 +17,12 @@
     var_type: "{{ my_var_type | default('kitchen') }}"
     ec2build: true
   tasks:
-  - name: Add override host
-    when: override_host is defined
-    add_host:
-      hostname: "{{ override_host }}"
-      groups: kitchen_instance
-    changed_when: false
+    - name: Add override host
+      when: override_host is defined
+      add_host:
+        hostname: "{{ override_host }}"
+        groups: kitchen_instance
+      changed_when: false
 
   roles:
     - role: 'ec2-create'
@@ -30,8 +31,8 @@
 - name: Configure instance
   hosts: ec2_instance
   remote_user: ec2-user
-  become: True
-  gather_facts: True
+  become: true
+  gather_facts: true
   vars:
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
     var_type: "{{ my_var_type | default('kitchen') }}"
@@ -46,44 +47,44 @@
       when: efsmount | bool
     - role: 'jenkins-install'
       when: jenkins | bool
-      become: yes
+      become: true
     - role: 'jenkins-configure'
       when: jenkins | bool
-      become: yes
-#    - nginx
-#    - certbot
+      become: true
+      # - nginx
+      # - certbot
 
   tasks:
-  - include_vars: users.yml
+    - include_vars: users.yml
 
-  - name: Crate /users directory
-    file:
-      path: /users
-      state: directory
+    - name: Crate /users directory
+      file:
+        path: /users
+        state: directory
 
-  - name: Add users | create users, shell, home dirs
-    user:
-      name: '{{ item.username }}'
-      shell: /bin/bash
-      uid: '{{ item.uid }}'
-      createhome: yes
-      home: "/users/{{ item.username }}"
-      comment: 'create with anisble'
-      append: yes
-    with_items: '{{ users }}'
+    - name: Add users | create users, shell, home dirs
+      user:
+        name: '{{ item.username }}'
+        shell: /bin/bash
+        uid: '{{ item.uid }}'
+        createhome: true
+        home: "/users/{{ item.username }}"
+        comment: 'create with anisble'
+        append: true
+      with_items: '{{ users }}'
 
-  - name: Setup | authorized key upload
-    authorized_key:
-      user: "{{ item.username }}"
-      key: "{{ lookup('file', 'pub_keys/{{ item.username }}.pub') }}"
-    with_items: '{{ users }}'
+    - name: Setup | authorized key upload
+      authorized_key:
+        user: "{{ item.username }}"
+        key: "{{ lookup('file', 'pub_keys/{{ item.username }}.pub') }}"
+      with_items: '{{ users }}'
 
-  - name: sudoers | update sudoers file and validate
-    lineinfile:
-      path: /etc/sudoers
-      insertafter: EOF
-      line: '{{ item.username }} ALL =(ALL) NOPASSWD: ALL'
-      regexp: '^{{ item.username }} .*'
-      state: present
-    when: item.use_sudo
-    with_items: '{{ users }}'
+    - name: sudoers | update sudoers file and validate
+      lineinfile:
+        path: /etc/sudoers
+        insertafter: EOF
+        line: '{{ item.username }} ALL =(ALL) NOPASSWD: ALL'
+        regexp: '^{{ item.username }} .*'
+        state: present
+      when: item.use_sudo
+      with_items: '{{ users }}'

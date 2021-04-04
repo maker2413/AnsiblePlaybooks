@@ -1,13 +1,13 @@
 ---
 users:
   - username: epost
-    use_sudo: yes
+    use_sudo: true
     uid: 2413
 
   - username: dpruitt
-    use_sudo: yes
+    use_sudo: true
     uid: 6857
 
   - username: cgerpen
-    use_sudo: yes
+    use_sudo: true
     uid: 7001
