@@ -3,4 +3,4 @@
 groovy_scripts: [
 ec2,
 csrf,
-location ]
+location]

@@ -6,18 +6,18 @@
 - name: Create a new developer ec2 instance
   ec2:
     key_name: "{{ keypair }}"
-    group_id: "{{ security_group }}" # security group name
+    group_id: "{{ security_group }}"  # security group name
     instance_type: "{{ instance_type }}"
     image: "{{ ami }}"
     wait: true
     instance_profile_name: "{{ iam }}"
     region: "{{ region }}"
-    count: 1 #default
+    count: 1  # default
     volumes:
       - device_name: /dev/xvda
         volume_type: gp2
         volume_size: "{{ vol_size }}"
-        delete_on_termination: yes
+        delete_on_termination: true
         tags:
           - Project: "{{ proj_tag }}"
     count_tag:
@@ -27,7 +27,7 @@
       Name: "{{ name_tag }}"
       Project: "{{ proj_tag }}"
     vpc_subnet_id: "{{ subnet }}"
-    assign_public_ip: yes
+    assign_public_ip: true
   register: ec2_provision_result
 
 - name: Wait for SSH to come up
@@ -42,4 +42,3 @@
     hostname: "{{ item.private_ip }}"
     groupname: ec2_instance
   with_items: "{{ ec2_provision_result.instances }}"
-

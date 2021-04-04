@@ -43,7 +43,7 @@
     state: link
     owner: root
     group: root
-    force: yes
+    force: true
   with_items:
     - src: "/etc/nginx/conf.d/available/{{ web_server }}-rproxy-ssl.conf"
       dest: "/etc/nginx/conf.d/enabled/{{ web_server }}.conf"
@@ -61,4 +61,4 @@
   service:
     name: nginx
     state: restarted
-    enabled: yes
+    enabled: true

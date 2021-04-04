@@ -1,12 +1,12 @@
 ---
 # tasks file for jenkin-docker-worker
-- name:  Add the epel repo
+- name: Add the epel repo
   yum:
     lock_timeout: 180
     name: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
     state: present
 
-- name:  Add the IUS repo
+- name: Add the IUS repo
   yum:
     lock_timeout: 180
     name: 'https://centos7.iuscommunity.org/ius-release.rpm'
@@ -17,7 +17,7 @@
     lock_timeout: 180
     name: '*'
     state: latest
-  
+
 - name: Install Worker Software
   yum:
     lock_timeout: 180

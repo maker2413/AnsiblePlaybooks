@@ -1,12 +1,12 @@
 ---
 # tasks file for epel-ius
-- name:  Add the EPEL repo
-  yum: 
+- name: Add the EPEL repo
+  yum:
     lock_timeout: 180
     name: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
     state: present
 
-- name:  Add the IUS repo
+- name: Add the IUS repo
   yum:
     lock_timeout: 180
     name: 'https://centos7.iuscommunity.org/ius-release.rpm'

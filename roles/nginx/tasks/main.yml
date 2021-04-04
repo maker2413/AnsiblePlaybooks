@@ -9,7 +9,7 @@
     name:
       - nginx
     state: latest
-    
+
 - name: Main Nginx Config
   template:
     src: "nginx.conf.j2"
@@ -17,7 +17,7 @@
     owner: root
     group: root
     mode: 0644
-    backup: yes
+    backup: true
 
 - name: Create available and enabled dirs
   file:
@@ -37,7 +37,7 @@
     owner: root
     group: root
     mode: 0644
-    backup: yes
+    backup: true
   with_items: "{{ web_server }}"
 
 - name: Enabled Site Links
@@ -47,11 +47,11 @@
     state: link
     owner: root
     group: root
-    force: yes
+    force: true
   with_items:
     - src: "/etc/nginx/conf.d/available/{{ web_server }}-rproxy.conf"
       dest: "/etc/nginx/conf.d/enabled/{{ web_server }}.conf"
-  
+
 - name: Create Jenkins logging dir
   file:
     path: "/var/log/nginx/{{ item }}"
@@ -66,4 +66,4 @@
   service:
     name: nginx
     state: started
-    enabled: yes
+    enabled: true

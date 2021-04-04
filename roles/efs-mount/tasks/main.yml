@@ -4,7 +4,7 @@
   yum:
     lock_timeout: 180
     state: present
-    disable_gpg_check: yes
+    disable_gpg_check: true
     name:
       - amazon-efs-utils
 

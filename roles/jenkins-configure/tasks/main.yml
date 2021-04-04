@@ -14,7 +14,7 @@
     group: root
     mode: 600
   with_items: jenkins-sysconfig.j2
-  
+
 # move groovy scripts into init.groovy.d
 - name: Configure Jenkins with groovy scirpts
   template:
